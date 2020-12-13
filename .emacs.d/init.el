@@ -1,0 +1,81 @@
+;; Emacs package system
+
+(require 'package)
+(setq package-archives '(("mepla" .  "http://melpha.org/packages/")
+			 ("gnu" . "https://elpa.gnu.org/packages/")
+			 ("org" . "http://orgmode.org/elpa")))
+(setq package-enable-at-startup nil)
+(package-initialize)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
+ '(cua-mode t nil (cua-base))
+ '(custom-enabled-themes '(misterioso))
+ '(display-time-mode t)
+ '(font-use-system-font t)
+ '(tool-bar-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Fira Code" :foundry "CTDB" :slant normal :weight normal :height 113 :width normal)))))
+
+; 全角かな設定
+(set-fontset-font (frame-parameter nil 'font)
+                  'japanese-jisx0208
+                  (font-spec :family "Noto Sans Mono CJK JP" :size 14))
+; 半角ｶﾅ設定
+(set-fontset-font (frame-parameter nil 'font)
+                  'katakana-jisx0201
+                  (font-spec :family "Noto Sans Mono CJK JP" :size 14))
+
+;; CUAモード (C-RET) 有効
+(cua-mode t)
+(setq cua-enable-cua-keys nil)
+
+;; C-h > Backspace back
+(global-set-key (kbd "C-h") 'delete-backward-char)
+
+;; default encoding: UTF-8
+(prefer-coding-system 'utf-8)
+
+;; 自動保存のバックアップdir > ~/.emanc.d/backup
+(setq backup-directory-alist
+      (cons (cons ".*" (expand-file-name "~/.emacs.d/backup"))
+	    backup-directory-alist))
+(setq auto-save-file-name-transforms
+      `((".*", (expand-file-name "~/.emacs.d/backup/") t)))
+
+;; tool bar unabled
+(tool-bar-mode -1)
+
+;; Time shows on mode line
+(display-time-mode t)
+
+;; line number shows mode-line
+(column-number-mode t)
+
+;; 左端に行数表示
+(global-linum-mode t)
+
+;; 環境を日本語,UTF-8にする
+(set-locale-environment nil)
+(set-language-environment "Japanese")
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-buffer-file-coding-system 'utf-8)
+(setq default-buffer-file-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(prefer-coding-system 'utf-8)
+
+;; 改行コードを表示する
+(setq eol-mnemonic-dos "(CRLF)")
+(setq eol-mnemonic-mac "(CR)")
+(setq eol-mnemonic-unix "(LF)")
+
+(provide 'init)

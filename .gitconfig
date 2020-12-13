@@ -1,0 +1,5 @@
+[user]
+	email = mteramoto.knct@gmail.com
+	name = Makoto Teramoto
+[credential]
+	helper = cache
