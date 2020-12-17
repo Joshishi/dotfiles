@@ -1,4 +1,4 @@
-;; init.el -- Personal init.el -*- lexical-binding: t -*-
+;;; init.el --- Personal init.el -*- lexical-binding: t; -*-
 
 ;; Author: Makoto Teramoto <mteramoto.knct@gmail.com>
 ;; Created: 2020/12/16
@@ -235,6 +235,84 @@
   :config
   (add-to-list 'company-backends 'company-c-headers))
 
+(leaf iceberg-theme
+  :doc "Iceberg-theme"
+  :url "https://github.com/conao3/iceberg-theme.el"
+  :tag "color-scheme"
+  :ensure t
+  :config
+  (iceberg-theme-create-theme-file)
+  (load-theme 'solarized-iceberg-dark t))
+
+(leaf markdown-preview-mode
+  :doc "Preview the markdown"
+  :tag "tools"
+  :ensure t
+  :config
+  (setq markdown-preview-stylesheets (list "github.css"))
+  (setq markdown-command "multimarkdown"))
+
+ ;; General configuration
+
+;; Escape from the warning "Package cl is deprecated"
+(setq byte-compile-warnings '(not cl-functions obsolete))
+(setq inhibit-startup-message t)    ;; Hide startup message
+(global-linum-mode t)               ;; Enable line numbers globally
+
+;; Japanese languages
+(set-language-environment "Japanese")
+
+;; chatacter coding: utf-8
+(prefer-coding-system 'utf-8)
+
+;; configure the size of tabs
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
+(setq tab-stop-list '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60))
+(global-set-key (kbd "<backtab>") 'backtab-to-tab-stop)
+
+;; backtab
+(defun backtab-to-tab-stop ()
+  "Back to previous tab-stop."
+  (interactive)
+  (let ((tabs tab-stop-list)
+        (col (current-column))
+        (tab-last 0))
+    (back-to-indentation)           ; 現在行の白文字でない最初の文字へポイントを移動
+    (if (= col (current-column))        ; 当初のカーソル位置が白文字でない最初の文字位置と一致しているかどうかで期待する位置を調整
+        (while (and tabs (> col (car tabs)))
+          (setq tab-last (car tabs))
+          (setq tabs (cdr tabs)))
+      (while (and tabs (>= col (car tabs)))
+        (setq tab-last (car tabs))
+        (setq tabs (cdr tabs))))
+                                        ; 期待するタブ位置にくるまで１文字ずつ削除
+    (while (> (current-column) tab-last)
+      (delete-char 1))))
+
+;; unvisible the menu bar
+(menu-bar-mode -1)
+
+;; unvisible tool bar
+(if window-system
+    (tool-bar-mode 0))
+
+;; display the newline code
+(setq eol-mnemonic-dos "(CRLF)")
+(setq eol-mnemonic-mac "(CR)")
+(setq eol-mnemonic-unix "(LF)")
+
+;; highlight the current line
+(global-hl-line-mode 0)
+
+;; share with clipbord
+(setq x-select-enable-clipboard t)
+
+(provide 'init)
+
 ;; Local Variables:
+;; indent-tabs-mode: nil
 ;; byte-compile-warnings: (not cl-functions obsolete)
 ;; End:
+
+;;; init.el ends here
