@@ -18,8 +18,8 @@
 (eval-and-compile
   (customize-set-variable
    'package-archives '(("gnu"    . "https://elpa.gnu.org/packages/")
-		       ("melpha" . "https://melpa.org/packages/")
-		       ("org"    . "https://orgmode.org/elpa/")))
+		               ("melpha" . "https://melpa.org/packages/")
+		               ("org"    . "https://orgmode.org/elpa/")))
   (package-initialize)
   (unless (package-installed-p 'leaf)
     (package-refresh-contents)
@@ -46,8 +46,8 @@
       :tag "builtin" "internal"
       :preface
       (defun c/redraw-frame nil
-	(interactive)
-	(redraw-frame))
+	  (interactive)
+	  (redraw-frame))
 
       :bind (("M-ESC ESC" . c/redraw-frame))
       :custom '((user-full-name . "Makoto Teramoto")
@@ -87,11 +87,11 @@
       :tag "builtin"
       :defvar (c-basic-offset)
       :bind (c-mode-base-map
-	     ("C-c c" . compile))
+	        ("C-c c" . compile))
       :mode-hook
       (c-mode-hook . ((c-set-style "bsd")
-		      (setq c-basic-offset 4)
-		      (setq indent-tabs-mode nil)))
+		    (setq c-basic-offset 4)
+		    (setq indent-tabs-mode nil)))
       (c++-mode-hook . ((c-set-style "bsd")
 			(setq c-basic-offset 4)
 			(setq indent-tabs-mode nil))))
@@ -110,10 +110,10 @@
       :doc "basic editing commands for Emacs"
       :tag "builtin" "internal"
       :custom ((kill-ring-max . 100)
-	       (kill-read-only-ok . t)
-	       (kill-whole-lne . t)
-	       (eval-expression-print^length . nil)
-	       (eval-expression-print-level . nil)))
+	           (kill-read-only-ok . t)
+	           (kill-whole-lne . t)
+	           (eval-expression-print^length . nil)
+	           (eval-expression-print-level . nil)))
 
 (leaf files
       :doc "file input and output commands for Emacs"
@@ -162,9 +162,9 @@
 	    :ensure t
 	    :blackout t
 	    :bind (("C-S-s" . counsel-imenu)
-		   ("C-x C-r" . counsel-recentf))
+               ("C-x C-r" . counsel-recentf))
 	    :custom `((counsel-yank-pop-separator . "\n----------\n")
-		      (counsel-find-file-ignore-regexp . ,(rx-to-string '(or  "./" "../") 'no-group)))
+                  (counsel-find-file-ignore-regexp . ,(rx-to-string '(or  "./" "../") 'no-group)))
 	    :global-minor-mode t))
 
 (leaf prescient
@@ -198,6 +198,79 @@
   :bind (("M-n" . flycheck-next-error)
          ("M-p" . flycheck-previous-error))
   :global-minor-mode global-flycheck-mode)
+
+(leaf lsp-mode
+  :doc "Language Server Protocol support for Emacs"
+  :ensure t
+  :require t
+  :custom (lsp-prefer-flymake . nil)    ; flycheckを優先する
+  :bind (:lsp-mode-map
+         ("C-c C-e" . lsp-workspace-restart)
+         ("C-c C-i" . lsp-format-buffer)
+         ("C-c C-n" . lsp-rename)
+         ("C-c C-t" . lsp-describe-thing-at-point))
+  :config
+  (leaf helm-lsp
+    :doc "Helm package for LSP in Emacs"
+    :ensure t
+    :require t
+    :bind (:lsp-mode-map :package lsp-mode ("C-." . helm-lsp-workspace-symbol)))
+  (leaf company-lsp
+    :doc "Modular texr completion framework for LSP in Emacs"
+    :ensure t
+    :require t
+    :config
+    (leaf yasnippet :ensure t :require t)
+    :custom
+    ((company-lsp-cache-candidates . t)
+     (company-lsp-asyn . t)
+     (company-lsp-enable-recompletion . nil)))
+  (leaf lsp-ui
+    :doc "lsp-mode ui"
+    :ensure t
+    :require t
+    :custom
+    ((lsp-ui-doc-enable . t)
+     (lsp-ui-doc-header . t)
+     (lsp-ui-doc-include-signature . t)
+     (lsp-ui-doc-position . 'at-point)
+     (lsp-ui-doc-max-width . 150)
+     (lsp-ui-doc-use-childframe . t)
+     (lsp-ui-doc-use-webkit . t)
+     (lsp-ui-flycheck-enable . t)
+     ;; lsp-ui-peek
+     (lsp-ui-peek-enable . t)
+     (lsp-ui-peek-peek-height . 20)
+     (lsp-ui-pee-list-width . 50)
+     (lsp-ui-peek-fontify . 'on-demand))
+    :preface
+    (defun ladicle/toggle-lsp-ui-doc ()
+      (interactive)
+      (progn
+        (lsp-ui-doc-mode -1)
+        (lsp-ui-doc--hide-frame)
+        (lsp-ui-doc-mode 1)))
+    :bind
+    (:lsp-mode-map
+     ("C-c C-r" . lsp-ui-peek-find-references)
+     ("C-c C-j" . lsp-ui-peek-find-definitions)
+     ("C-c i"   . lsp-ui-peek-find-implementation)
+     ("C-c m"   . lsp-ui-imenu)
+     ("C-c s"   . lsp-ui-sideline-mode)
+     ("C-c d"   . ladicle/toggle-lsp-ui-doc))
+    :hook
+    (lsp-mode . lsp-ui-mode)))
+
+(leaf lsp
+  :hook
+  css-mode-hook
+  go-mode-hook
+  haskell-mode-hook
+  java-mode-hook
+  python-mode-hook
+  c-mode-hook
+  c++-mode-hook
+  :hook (prog-major-mode , lsp-prog-major-mode-enable))
 
 (leaf company
   :doc "Modular text completion framework"
@@ -243,6 +316,17 @@
   :config
   (iceberg-theme-create-theme-file)
   (load-theme 'solarized-iceberg-dark t))
+
+;; Key-bind presentation
+(leaf posframe
+  :ensure t
+  :when (version<="26.1" emacs-version)
+  :when window-system
+  :config
+  (leaf which-key-posframe
+    :ensure t
+    :after which-key
+    :custom ((which-key-posframe-mode . t))))
 
 (leaf markdown-preview-mode
   :doc "Preview the markdown"
