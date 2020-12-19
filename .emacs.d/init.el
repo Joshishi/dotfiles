@@ -1,5 +1,4 @@
-;;; init.el --- Personal init.el -*- lexical-binding: t; -*-
-
+;;; init.el --- Personal init.el -*- lexical-binding: t; -*- 
 ;; Author: Makoto Teramoto <mteramoto.knct@gmail.com>
 ;; Created: 2020/12/16
 ;; Version: 1
@@ -11,8 +10,8 @@
 (eval-and-compile
   (when (or load-file-name byte-compile-current-file)
     (setq user-emacs-directory
-	  (expand-file-name
-	   (file-name-directory (or load-file-name byte-compile-current-file))))))
+	      (expand-file-name
+	       (file-name-directory (or load-file-name byte-compile-current-file))))))
 
 ;; <leaf-install-code>
 (eval-and-compile
@@ -32,140 +31,140 @@
 	(leaf blackout :ensure t)
 
 	:config
-        ;; initialize leaf-keywords.el
+    ;; initialize leaf-keywords.el
 	(leaf-keywords-init)))
 ;; </leaf-install-code>
 
 (leaf cus-edit
-      :doc "tools for custmizing Emacs and Lisp packages"
-      :tag "builtin" "faces" "help"
-      :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
+  :doc "tools for custmizing Emacs and Lisp packages"
+  :tag "builtin" "faces" "help"
+  :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
 
 (leaf cus-start
-      :doc "define customization properties of builtins"
-      :tag "builtin" "internal"
-      :preface
-      (defun c/redraw-frame nil
-	  (interactive)
-	  (redraw-frame))
+  :doc "define customization properties of builtins"
+  :tag "builtin" "internal"
+  :preface
+  (defun c/redraw-frame nil
+	(interactive)
+	(redraw-frame))
 
-      :bind (("M-ESC ESC" . c/redraw-frame))
-      :custom '((user-full-name . "Makoto Teramoto")
-		(user-mail-address . "mteramoto.knct@gmail.com")
-		(user-login-name . "Joshishi")
-		(create-lockfiles . nil)
-		(debug-on-error . t)
-		(init-file-debug . t)
-		(frame-resize-pixelwise . t)
-		(enable-recursive-minibuffers . t)
-		(history-length . 1000)
-		(history-delete-duplicates . t)
-		(scroll-preserve-screen-position . t)
-		(scroll-conservatively . 100)
-		(mouse-wheel-scroll-amount . '(1 ((control) . 5)))
-		(ring-bell-function . 'ignore)
-		(text-quoting-style . 'straight)
-		(truncate-lines . t)
-		;; (use-dialog-box . nil)
-		;; (use-file-dialog . nil)
-		;; (menu-bar-mode . t)
-		;; (tool-bar-mode . nil)
-		(scroll-bar-mode . nil)
-		(indent-tabs-mode . nil))
-      :config
-      (defalias 'yes-or-no-p 'y-or-n-p)
-      (keyboard-translate ?\C-h ?\C-?))
+  :bind (("M-ESC ESC" . c/redraw-frame))
+  :custom '((user-full-name . "Makoto Teramoto")
+		    (user-mail-address . "mteramoto.knct@gmail.com")
+		    (user-login-name . "Joshishi")
+		    (create-lockfiles . nil)
+		    (debug-on-error . t)
+		    (init-file-debug . t)
+		    (frame-resize-pixelwise . t)
+		    (enable-recursive-minibuffers . t)
+		    (history-length . 1000)
+		    (history-delete-duplicates . t)
+		    (scroll-preserve-screen-position . t)
+		    (scroll-conservatively . 100)
+		    (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
+		    (ring-bell-function . 'ignore)
+		    (text-quoting-style . 'straight)
+		    (truncate-lines . t)
+		    ;; (use-dialog-box . nil)
+		    ;; (use-file-dialog . nil)
+		    ;; (menu-bar-mode . t)
+		    ;; (tool-bar-mode . nil)
+		    (scroll-bar-mode . nil)
+		    (indent-tabs-mode . nil))
+  :config
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (keyboard-translate ?\C-h ?\C-?))
 
 (leaf autorevert
-      :doc "revert buffers when files on disk change"
-      :tag "builtin"
-      :custom ((auto-revert-interval . 1))
-      :global-minor-mode global-auto-revert-mode)
+  :doc "revert buffers when files on disk change"
+  :tag "builtin"
+  :custom ((auto-revert-interval . 1))
+  :global-minor-mode global-auto-revert-mode)
 
 (leaf cc-mode
-      :doc "major mode for editing C and similar languages"
-      :tag "builtin"
-      :defvar (c-basic-offset)
-      :bind (c-mode-base-map
-	        ("C-c c" . compile))
-      :mode-hook
-      (c-mode-hook . ((c-set-style "bsd")
-		    (setq c-basic-offset 4)
-		    (setq indent-tabs-mode nil)))
-      (c++-mode-hook . ((c-set-style "bsd")
-			(setq c-basic-offset 4)
-			(setq indent-tabs-mode nil))))
+  :doc "major mode for editing C and similar languages"
+  :tag "builtin"
+  :defvar (c-basic-offset)
+  :bind (c-mode-base-map
+	     ("C-c c" . compile))
+  :mode-hook
+  (c-mode-hook . ((c-set-style "bsd")
+		          (setq c-basic-offset 4)
+		          (setq indent-tabs-mode nil)))
+  (c++-mode-hook . ((c-set-style "bsd")
+			        (setq c-basic-offset 4)
+			        (setq indent-tabs-mode nil))))
 (leaf delsel
-      :doc "delete selection if you insert"
-      :tag "builtin"
-      :global-minor-mode delete-selection-mode)
+  :doc "delete selection if you insert"
+  :tag "builtin"
+  :global-minor-mode delete-selection-mode)
 
 (leaf paren
-      :doc "highlight matching paren"
-      :tag "builtin"
-      :custom ((show-paren-delay . 0.1))
-      :global-minor-mode show-paren-mode)
+  :doc "highlight matching paren"
+  :tag "builtin"
+  :custom ((show-paren-delay . 0.1))
+  :global-minor-mode show-paren-mode)
 
 (leaf simple
-      :doc "basic editing commands for Emacs"
-      :tag "builtin" "internal"
-      :custom ((kill-ring-max . 100)
-	           (kill-read-only-ok . t)
-	           (kill-whole-lne . t)
-	           (eval-expression-print^length . nil)
-	           (eval-expression-print-level . nil)))
+  :doc "basic editing commands for Emacs"
+  :tag "builtin" "internal"
+  :custom ((kill-ring-max . 100)
+	       (kill-read-only-ok . t)
+	       (kill-whole-lne . t)
+	       (eval-expression-print^length . nil)
+	       (eval-expression-print-level . nil)))
 
 (leaf files
-      :doc "file input and output commands for Emacs"
-      :tag "builtin"
-      :custom `((auto-save-timeout . 15)
-		(auto-save-interval . 60)
-		(auto-save-file-name-tranforms . '((".*" , (locate-user-emacs-file "backup/") t)))
-		(backup-directory-alist . '((".*" . ,(locate-user-emacs-file "backup"))
-					    (,tramp-file-name-regexp . nil)))
-		(version-control . t)
-		(delete-old-versions . t)))
+  :doc "file input and output commands for Emacs"
+  :tag "builtin"
+  :custom `((auto-save-timeout . 15)
+		    (auto-save-interval . 60)
+		    (auto-save-file-name-tranforms . '((".*" , (locate-user-emacs-file "backup/") t)))
+		    (backup-directory-alist . '((".*" . ,(locate-user-emacs-file "backup"))
+					                    (,tramp-file-name-regexp . nil)))
+		    (version-control . t)
+		    (delete-old-versions . t)))
 
 (leaf startup
-      :doc "process Emacs shell arguments"
-      :tag "builtin" "internal"
-      :custom `((auto-save-list-file-prefix . ,(locate-user-emacs-file "backup/ .saves-"))))
+  :doc "process Emacs shell arguments"
+  :tag "builtin" "internal"
+  :custom `((auto-save-list-file-prefix . ,(locate-user-emacs-file "backup/ .saves-"))))
 
 (leaf ivy
-      :doc "Incremental Vertical completion"
-      :req "emacs-24.5"
-      :tag "matching" "emacs>=24.5"
-      :url "https://github.com/abo-abo/swiper"
-      :emacs>= 24.5
-      :ensure t
-      :blackout t
-      :leaf-defer nil
-      :custom ((ivy-initial-inputs-alist . nil)
+  :doc "Incremental Vertical completion"
+  :req "emacs-24.5"
+  :tag "matching" "emacs>=24.5"
+  :url "https://github.com/abo-abo/swiper"
+  :emacs>= 24.5
+  :ensure t
+  :blackout t
+  :leaf-defer nil
+  :custom ((ivy-initial-inputs-alist . nil)
 	       (ivy-use-selectable-prompt . t))
-      :global-minor-mode t
-      :config
-      (leaf swiper
-	    :doc "I search with an overview. Oh, man!"
-	    :req "emacs-24.5" "ivy-0.13.0"
-	    :tag "matching" "emacs>=24.5"
-	    :url "https://github.com/abo-abo/swiper"
-	    :emacs>= 24.5
-	    :ensure t
-	    :bind (("C-s" . swiper)))
+  :global-minor-mode t
+  :config
+  (leaf swiper
+	:doc "I search with an overview. Oh, man!"
+	:req "emacs-24.5" "ivy-0.13.0"
+	:tag "matching" "emacs>=24.5"
+	:url "https://github.com/abo-abo/swiper"
+	:emacs>= 24.5
+	:ensure t
+	:bind (("C-s" . swiper)))
 
-      (leaf counsel
-	    :doc "Various completion finctions using Ivy"
-	    :req "emacs-24.5" "swiper-0.13.0"
-	    :tag "tools" "matching" "convenience" "emacs>=24.5"
-	    :url "https://github.com/abo-abo/swiper"
-	    :emacs>= 24.5
-	    :ensure t
-	    :blackout t
-	    :bind (("C-S-s" . counsel-imenu)
-               ("C-x C-r" . counsel-recentf))
-	    :custom `((counsel-yank-pop-separator . "\n----------\n")
-                  (counsel-find-file-ignore-regexp . ,(rx-to-string '(or  "./" "../") 'no-group)))
-	    :global-minor-mode t))
+  (leaf counsel
+	:doc "Various completion finctions using Ivy"
+	:req "emacs-24.5" "swiper-0.13.0"
+	:tag "tools" "matching" "convenience" "emacs>=24.5"
+	:url "https://github.com/abo-abo/swiper"
+	:emacs>= 24.5
+	:ensure t
+	:blackout t
+	:bind (("C-S-s" . counsel-imenu)
+           ("C-x C-r" . counsel-recentf))
+	:custom `((counsel-yank-pop-separator . "\n----------\n")
+              (counsel-find-file-ignore-regexp . ,(rx-to-string '(or  "./" "../") 'no-group)))
+	:global-minor-mode t))
 
 (leaf prescient
   :doc "Better sorting and filtering"
@@ -176,7 +175,7 @@
   :ensure t
   :custom ((prescient-aggressive-file-save . t))
   :global-minor-mode prescient-persist-mode)
-  
+
 (leaf ivy-prescient
   :doc "prescient.el + Ivy"
   :req "emacs-25.1" "prescient-4.0" "ivy-0.11.0"
@@ -203,7 +202,7 @@
   :doc "Language Server Protocol support for Emacs"
   :ensure t
   :require t
-  :custom (lsp-prefer-flymake . nil)    ; flycheckを優先する
+  :custom (lsp-prefer-flymake . 'flymake)
   :bind (:lsp-mode-map
          ("C-c C-e" . lsp-workspace-restart)
          ("C-c C-i" . lsp-format-buffer)
@@ -336,7 +335,7 @@
   (setq markdown-preview-stylesheets (list "github.css"))
   (setq markdown-command "multimarkdown"))
 
- ;; General configuration
+;; General configuration
 
 ;; Escape from the warning "Package cl is deprecated"
 (setq byte-compile-warnings '(not cl-functions obsolete))
@@ -348,6 +347,17 @@
 
 ;; chatacter coding: utf-8
 (prefer-coding-system 'utf-8)
+
+;; configure the default framework
+(setq default-frame-alist
+      '((width . 120)
+        (height . 40)
+        (top . 0)
+        (left . 0)
+        (font . "Hack Nerd Font-10")))
+
+;; 日本語環境のみのフォント
+(set-fontset-font t 'japanese-jisx0208 "Noto Sans CJK JP-10")
 
 ;; configure the size of tabs
 (setq-default tab-width 4)
