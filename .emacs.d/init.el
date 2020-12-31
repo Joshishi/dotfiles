@@ -35,6 +35,10 @@
 	(leaf-keywords-init)))
 ;; </leaf-install-code>
 
+;; -----------------------------
+;; General packages
+;; -----------------------------
+
 (leaf cus-edit
   :doc "tools for custmizing Emacs and Lisp packages"
   :tag "builtin" "faces" "help"
@@ -81,19 +85,6 @@
   :custom ((auto-revert-interval . 1))
   :global-minor-mode global-auto-revert-mode)
 
-(leaf cc-mode
-  :doc "major mode for editing C and similar languages"
-  :tag "builtin"
-  :defvar (c-basic-offset)
-  :bind (c-mode-base-map
-	     ("C-c c" . compile))
-  :mode-hook
-  (c-mode-hook . ((c-set-style "bsd")
-		          (setq c-basic-offset 4)
-		          (setq indent-tabs-mode nil)))
-  (c++-mode-hook . ((c-set-style "bsd")
-			        (setq c-basic-offset 4)
-			        (setq indent-tabs-mode nil))))
 (leaf delsel
   :doc "delete selection if you insert"
   :tag "builtin"
@@ -129,6 +120,38 @@
   :doc "process Emacs shell arguments"
   :tag "builtin" "internal"
   :custom `((auto-save-list-file-prefix . ,(locate-user-emacs-file "backup/ .saves-"))))
+
+(leaf iceberg-theme
+  :doc "Iceberg-theme"
+  :url "https://github.com/conao3/iceberg-theme.el"
+  :tag "color-scheme"
+  :ensure t
+  :config
+  (iceberg-theme-create-theme-file)
+  (load-theme 'solarized-iceberg-dark t))
+
+;; Key-bind presentation
+(leaf which-key
+  :ensure t
+  :hook (after-init-hook . which-key-mode)
+  :config
+  (which-key-setup-minibuffer)
+  (setq which-key-show-early-on-C-h t)
+  (setq which-key-idle-secondary-delay 0))
+
+(leaf rainbow-delimiters
+  :ensure t
+  :hook
+  ((prog-mode-hook . rainbow-delimiters-mode)))
+
+(leaf highlight-indent-guides
+  :ensure t
+  :blackout t
+  :hook (((prog-mode-hook yaml-mode-hook) . highlight-indent-guides-mode))
+  :custom ((highlight-indent-guides-method . 'character) 
+           (highlight-indent-guides-auto-enabled . t)
+           (highlight-indent-guides-responsive . t)
+           (highlight-indent-guides-character . ?\|)))
 
 (leaf ivy
   :doc "Incremental Vertical completion"
@@ -202,7 +225,11 @@
   :doc "Language Server Protocol support for Emacs"
   :ensure t
   :require t
-  :custom (lsp-prefer-flymake . 'flymake)
+  :commands lsp
+  :custom ((lsp-print-io . t)
+           (lsp-prefer-flymake . nil)
+           (lsp-prefer-capf . t)
+           (lsp-lens-mode . t))
   :bind (:lsp-mode-map
          ("C-c C-e" . lsp-workspace-restart)
          ("C-c C-i" . lsp-format-buffer)
@@ -214,16 +241,19 @@
     :ensure t
     :require t
     :bind (:lsp-mode-map :package lsp-mode ("C-." . helm-lsp-workspace-symbol)))
-  (leaf company-lsp
-    :doc "Modular texr completion framework for LSP in Emacs"
+  (leaf yasnippet
     :ensure t
     :require t
-    :config
-    (leaf yasnippet :ensure t :require t)
-    :custom
-    ((company-lsp-cache-candidates . t)
-     (company-lsp-asyn . t)
-     (company-lsp-enable-recompletion . nil)))
+    :bind
+    (:yas-minor-mode-map
+          ("C-x i n" . yas-new-snippet)
+          ("C-x i v" . yas-visit-snippet-file)
+          ("C-M-i"   . yas-insert-snippet))
+    (:yas-keymap
+          ("<tab>" . nil))
+    :init
+    (yas-global-mode t))
+  ;; company-lsp not supportedにつき削除
   (leaf lsp-ui
     :doc "lsp-mode ui"
     :ensure t
@@ -256,20 +286,127 @@
      ("C-c i"   . lsp-ui-peek-find-implementation)
      ("C-c m"   . lsp-ui-imenu)
      ("C-c s"   . lsp-ui-sideline-mode)
-     ("C-c d"   . ladicle/toggle-lsp-ui-doc))
-    :hook
-    (lsp-mode . lsp-ui-mode)))
-
-(leaf lsp
+     ("C-c d"   . ladicle/toggle-lsp-ui-doc)))
   :hook
-  css-mode-hook
-  go-mode-hook
-  haskell-mode-hook
-  java-mode-hook
-  python-mode-hook
-  c-mode-hook
-  c++-mode-hook
-  :hook (prog-major-mode , lsp-prog-major-mode-enable))
+    (lsp-mode-hook . lsp-ui-mode)
+    (bash-mode-hook . lsp)
+    ((c-mode-hook c++-mode-hook objc-mode-hook cuda-mode-hook) .
+     (lambda () (require 'ccls) (lsp)))
+    (go-mode-hook . lsp)
+    (python-mode-hook . lsp))
+
+(leaf conf-mode
+  :mode "\\.accpect_keywords$" "\\.keywords$" "\\.license$" "\\.mask$" "\\.unmask$" "\\.use$")
+
+(leaf csharp-mode
+  :ensure t
+  :hook
+  (csharp-mode . lsp))
+
+(leaf csv-mode :ensure t :require t)
+
+(leaf dotenv-mode :ensure t :mode "\\.env\\..*\\'" "\\.venv\\..*\\'")
+
+(leaf go-mode
+  :ensure t
+  :require t
+  :hook
+  (go-mode-hook . lsp))
+
+(leaf cmake-mode :after t)
+
+(leaf python-mode
+  :ensure t
+  :require t
+  :custom
+  (lsp-python-ms-auto-install-server . t)
+  :hook
+  (python-mode-hook . lsp))
+    
+(leaf elisp-mode
+  :custom (flycheck-emacs-lisp-load-path . 'inherit)
+  :bind (:emacs-lisp-mode-map
+         ("C-M-q" . nil)
+         ("C-c C-e" . macrostep-expand))
+  :config
+  (leaf elisp-slime-nav
+    :ensure t
+    :bind (:elisp-slime-nav-mode-map ("C-c C-d" . helpful-at-point))
+    :hook emacs-lisp-mode-hook help-mode-hook)
+  (leaf eldoc :hook emacs-lisp-mode-hook ielm-mode-hook)
+  (leaf flycheck-package :ensure t :after flycheck :defun flycheck-package-setup :config (flycheck-package-setup))
+  (leaf ielm :bind (:ielm-map ("C-c C-d" . helpful-at-point)))
+  (leaf macrostep :ensure t)
+  (leaf simple :bind (:read-expression-map ("<tab>" . completion-at-point))))
+
+(leaf dockerfile-mode
+  :el-get
+  (dockerfile-mode
+   :url "https://github.com/ncaq/dockerfile-mode.git"
+   :branch "add-dockerfile-indent-offset"))
+
+(leaf docker-compose-mode :ensure t)
+
+(leaf cc-mode
+  :doc "major mode for editing C and similar languages"
+  :tag "builtin"
+  :defvar (c-basic-offset)
+  :bind (c-mode-base-map
+	     ("C-c c" . compile))
+  :mode-hook
+  (c-mode-hook . ((c-set-style "bsd")
+		          (setq c-basic-offset 4)
+		          (setq indent-tabs-mode nil)))
+  (c++-mode-hook . ((c-set-style "bsd")
+			        (setq c-basic-offset 4)
+			        (setq indent-tabs-mode nil))))
+
+;; LSP server for c, c++, obj-c, and cuda
+(leaf ccls :ensure t :require t)
+
+(leaf lsp-java
+  :ensure t
+  :require t
+  :after cc-mode
+  :hook (java-mode-hook . lsp))
+
+(leaf js2-mode
+  :ensure t
+  :require t
+  :hook
+  ((js2-mode-hook . (lambda()
+                      (setq my-js-mode-indent-num 2)
+                      (setq js2-basic-ofset my-js-mode-indent-num)
+                      (setq js-switch-indentoffset my-js-mode-indent-num)))))
+
+(leaf markdown-mode
+  :ensure t
+  :after t
+  :custom
+  (markdown-fontify-code-blocks-natively . t)
+  (markdown-hide-urls . nil)
+  :defvar markdown-mode-map
+  :config
+  (custom-set-variables
+   '(markdown-code-lang-modes
+     (append
+      '(("diff" . diff-mode)
+        ("hs" . haskell-mode)
+        ("html" . web-mode)
+        ("ini" . conf-mode)
+        ("js" . web-mode)
+        ("jsx" . web-mode)
+        ("md" . markdown-mode)
+        ("pl6" . raku-mode)
+        ("py" . python-mode)
+        ("rb" . ruby-mode)
+        ("rs" . rustic-mode)
+        ("sqlite3" . sql-mode)
+        ("ts" . web-mode)
+        ("tsx" . web-mode)
+        ("yaml". yaml-mode)
+        ("zsh" . sh-mode))
+      markdown-code-lang-modes))))
 
 (leaf company
   :doc "Modular text completion framework"
@@ -307,26 +444,6 @@
   :config
   (add-to-list 'company-backends 'company-c-headers))
 
-(leaf iceberg-theme
-  :doc "Iceberg-theme"
-  :url "https://github.com/conao3/iceberg-theme.el"
-  :tag "color-scheme"
-  :ensure t
-  :config
-  (iceberg-theme-create-theme-file)
-  (load-theme 'solarized-iceberg-dark t))
-
-;; Key-bind presentation
-(leaf posframe
-  :ensure t
-  :when (version<="26.1" emacs-version)
-  :when window-system
-  :config
-  (leaf which-key-posframe
-    :ensure t
-    :after which-key
-    :custom ((which-key-posframe-mode . t))))
-
 (leaf markdown-preview-mode
   :doc "Preview the markdown"
   :tag "tools"
@@ -350,14 +467,14 @@
 
 ;; configure the default framework
 (setq default-frame-alist
-      '((width . 120)
-        (height . 40)
+      '((width . 160)
+        (height . 60)
         (top . 0)
         (left . 0)
-        (font . "Hack Nerd Font-10")))
+        (font . "Hack Nerd Font-11")))
 
 ;; 日本語環境のみのフォント
-(set-fontset-font t 'japanese-jisx0208 "Noto Sans CJK JP-10")
+(set-fontset-font t 'japanese-jisx0208 "Noto Sans CJK JP-11")
 
 ;; configure the size of tabs
 (setq-default tab-width 4)
