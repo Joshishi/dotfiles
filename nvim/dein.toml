@@ -51,6 +51,9 @@ hook_add = '''
 repo = 'neoclide/coc.nvim'
 merge = 0
 rev = "release"
+hook_add = '''
+    source ~/.config/nvim/plugins/coc.rc.vim
+'''
 
 [[plugins]]
 repo = 'Shougo/denite.nvim'
@@ -61,9 +64,9 @@ hook_add = '''
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
 hook_post_update = '''
-    if dein#util#_is_windows()
+    if has('win32')
         let cmd = 'tools\\update-dll-mingw'
-    elseif dein#util#_is_cygwin()
+    elseif has('win32unix')
         let cmd = 'make -f make_cygwin.mak'
     elseif executable('gmake')
         let cmd = 'gmake'
@@ -71,6 +74,12 @@ hook_post_update = '''
         let cmd = 'make'
     endif
     let g:dein#plugin.build = cmd
+'''
+
+[[plugins]]
+repo = 'Shougo/vimshell.vim'
+hook_add = '''
+    source ~/.config/nvim/plugins/vimshell.rc.vim
 '''
 
 [[plugins]]

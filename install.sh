@@ -18,6 +18,8 @@ mkdir -p $HOME/.config/nvim/plugins
 ln -s -f $HOME/dotfiles/nvim/init.vim $HOME/.config/nvim/init.vim
 ln -s -f $HOME/dotfiles/nvim/dein.toml $HOME/.config/nvim/dein.toml
 ln -s -f $HOME/dotfiles/nvim/dein_lazy.toml $HOME/.config/nvim/dein_lazy.toml
+ln -s -f $HOME/dotfiles/nvim/coc-settings.json $HOME/.config/nvim/coc-settings.json
 ln -s -f $HOME/dotfiles/nvim/plugins/defx.rc.vim $HOME/.config/nvim/plugins/defx.rc.vim
 ln -s -f $HOME/dotfiles/nvim/plugins/denite.rc.vim $HOME/.config/nvim/plugins/denite.rc.vim
-
+ln -s -f $HOME/dotfiles/nvim/plugins/coc.rc.vim $HOME/.config/nvim/plugins/coc.rc.vim
+ln -s -f $HOME/dotfiles/nvim/plugins/vimshell.rc.vim $HOME/.config/nvim/plugins/vimshell.rc.vim
