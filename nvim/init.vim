@@ -40,8 +40,6 @@ endif
 " dein.vimのパッケージ自動更新を有効にする
 let g:dein#auto_recache = 1
 
-filetype plugin indent on
-
 "------------------------------------------
 " setting
 " ------------------------------------------
@@ -74,8 +72,6 @@ set cursorline
 set cursorcolumn
 " 行末の1文字先までカーソルを移動できるように
 set virtualedit=onemore
-" Set the indent as smart-indent
-set smartindent
 " Visualize the beep sound...
 set visualbell
 " カッコ入力の対応表示
@@ -98,21 +94,49 @@ set guifontwide=Noto\ Sans\ Mono\ CKJ\ JP\ 11
 let g:airline_powerline_fonts = 1
 
 " ------------------------------------------
-" Tab
+" Tab / indent
 " ------------------------------------------
 
 " 不可視文字の可視化 
 set list
 set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%,space:_
-" set list listchars=tab:\ \-
 
+" Measure the indent of previous line
+set autoindent
+" Set the indent as smart-indent
+set smartindent
+" Set auto-indent for C-language
+set cindent
+" Set smart-tab for new line
+set smarttab
 " Set Tab char as space
 set expandtab
-" 画面上でタブ文字が占める幅 (space 2つ->4つp
+
+" 画面上でタブ文字が占める幅 (space 4つ)
 set tabstop=4
-" 自動インデントでずれる幅 (space 2つ->4つ)
+" 自動インデントでずれる幅 (space 4つ)
 set shiftwidth=4
 
+" filetype別のインデント設定
+if has("autocmd")
+    " activate the filetype search
+    filetype plugin on
+    " use the indent depends on filetype
+    filetype indent on
+    " sw=softtabstop, sts=shiftwidth, ts=tabstop, et=expandtab
+    autocmd FileType c          setlocal sw=8 sts=8 ts=8 et
+    autocmd FileType html       setlocal sw=4 sts=4 ts=4 et
+    autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
+    autocmd FileType js         setlocal sw=4 sts=4 ts=4 et
+    autocmd FileType json       setlocal sw=4 sts=4 ts=4 et
+    autocmd FileType javascript setlocal sw=4 sts=4 ts=4 et
+    autocmd FileType css        setlocal sw=4 sts=4 ts=4 et
+    autocmd FileType bash       setlocal sw=4 sts=4 ts=4 et
+endif
+
+" -----------------------------------------
+"  Search settings
+" -----------------------------------------
 " 検索系
 " 検索文字列が小文字の場合は大文字小文字関係なく検索
 set ignorecase
