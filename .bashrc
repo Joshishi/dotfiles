@@ -144,4 +144,5 @@ export QT_IM_MODULE=fcitx
 
 PATH="$PATH":/usr/local/freecad-build/bin
 
-
+# vim alias replaced by NeoVim
+alias vim='nvim'
