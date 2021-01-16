@@ -80,7 +80,32 @@ call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
     \ [ '.git/', '.ropeproect/', '__pycache__\',
     \   'venv/', 'images/', '*.min', 'img/', 'fonts/'])
 
+" grep
+command! -nargs=? Dgrep call s:Dgrep(<f-args>)
+function s:Dgrep(...)
+    if a:0 > 0
+        execute(':Denite -buffer-name=grep-buffer-denite grep -path='.a:1)
+    else
+        let l:path = expand('%:p:h')
+        if has_key(defx#get_candidate(), 'action_path')
+            let l:path = fnamemodify(defx#get_candidate()['action__path'], 'p:h')
+        endif
+        execute(':Denite -buffer-name=grep-buffer-denite -no-empty '.join(s:denite_option_array, ' ').' grep -path='.l:path)
+    endif
+endfunction
+
+" show Denite grep results
+command! Dresume execute(':Denite -resume -buffer-name=grep-buffer-denite '.join(s:denite_option_array, ' ').'')
+" next Denite grep result
+command! Dnext execute(':Denite -resume -buffer-name=grep-buffer-denite -cursor-pos=+1 -immediately '.join(s:denite_option_array, ' ').'')
+" previous Denite grep result
+command! Dprev execute(':Denite -resume -buffer-name=grep-buffer-denite -cursor-pos=-1 -immediately '.join(s:denite_option_array, ' ').'')
+" keymap
+call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>', 'noremap')
+call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>', 'noremap')
+
 " Configure the short-cut keys
-nnoremap <silent> ;r :<C-u>Denite grep -path=`getcwd()`<CR>
+nnoremap <silent> ;r :<C-u>Dgrep<CR>
 nnoremap <silent> ;f :<C-u>Denite file/rec<CR>
+nnoremap <silent> ;; :<C-u>Denite command command_history<CR>
 nnoremap <silent> ;p :<C-u>Denite -resume<CR>
