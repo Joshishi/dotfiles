@@ -88,9 +88,9 @@ nnoremap k gk
 "  Configure the Nerd font
 "  ---------------------------------------
 " Set font (hankaku)
-set guifont=Hack\ Nerd\ Font\ Regular\ 11
-" Set font (zenkaku)
-set guifontwide=Noto\ Sans\ Mono\ CKJ\ JP\ 11
+set guifont=HackGenNerd\ 11
+" Set font (zenkaku)"
+" set guifontwide=Noto\ Sans\ Mono\ CKJ\ JP\ 11
 let g:airline_powerline_fonts = 1
 
 " ------------------------------------------
