@@ -57,7 +57,7 @@ set autoread
 set hidden
 " 入力中のコマンドをステータスに表示する
 set showcmd
-" Yankをclipboardにコピーできように設定する
+" Yankをclipboardにコピーできるように設定する
 set clipboard+=unnamed
 
 " ------------------------------------------
@@ -90,7 +90,7 @@ nnoremap k gk
 " Set font (hankaku)
 set guifont=HackGenNerd\ 11
 " Set font (zenkaku)"
-" set guifontwide=Noto\ Sans\ Mono\ CKJ\ JP\ 11
+set guifontwide=HackGenNerd\ 11
 let g:airline_powerline_fonts = 1
 
 " ------------------------------------------
@@ -125,7 +125,9 @@ if has("autocmd")
     filetype indent on
     " sw=softtabstop, sts=shiftwidth, ts=tabstop, et=expandtab
     autocmd FileType c          setlocal sw=8 sts=8 ts=8 et
-    autocmd FileType cpp        setlocal sw=8 sts=8 ts=8 et
+    autocmd FileType h          setlocal sw=8 sts=8 ts=8 et
+    autocmd FileType cpp        setlocal sw=4 sts=4 ts=4 et
+    autocmd Filetype hpp        setlocal sw=4 sts=4 ts=4 et
     autocmd FileType html       setlocal sw=4 sts=4 ts=4 et
     autocmd FileType python     setlocal sw=4 sts=4 ts=4 et
     autocmd FileType js         setlocal sw=4 sts=4 ts=4 et

@@ -3,3 +3,5 @@
 	name = Makoto Teramoto
 [credential]
 	helper = cache
+[init]
+	defaultBranch = main
