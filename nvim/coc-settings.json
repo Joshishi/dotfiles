@@ -1,19 +1,57 @@
 {
-    "coc.preferences.formatOnSaveFiletypes": ["json", "css", "markdown"],
+    "coc.preferences.formatOnSaveFiletypes": [
+        "json",
+        "css",
+        "markdown",
+        "c",
+        "cpp",
+        "python"
+    ],
     "eslint.autoFixOnSave": true,
     "eslint.autoFix": true,
     "tsserver.enableJavascript": false,
+    // Python via Pylint
+    "python.pythonPath": "python",
+    "python.linting.enabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.mypyEnabled": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackdHTTPHeaders": {
+        "X-Fast-Or-Safe": "fast"
+    },
+    "python.analysis.diagnosticMode": "workspace",
+    "python.venvPath": ".venv",
+    "signature.target": "echo",
     "languageserver": {
         "bash": {
             "command": "bash-language-server",
-            "args": ["start"],
-            "filetypes": ["sh"],
-            "ignoredRootPaths": ["~"]
+            "args": [
+                "start"
+            ],
+            "filetypes": [
+                "sh"
+            ],
+            "ignoredRootPaths": [
+                "~"
+            ]
         },
         "ccls": {
             "command": "ccls",
-            "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
-            "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
+            "filetypes": [
+                "c",
+                "cc",
+                "cpp",
+                "c++",
+                "objc",
+                "objcpp"
+            ],
+            "rootPatterns": [
+                ".ccls",
+                "compile_commands.json",
+                ".git/",
+                ".hg/"
+            ],
             "initializationOptions": {
                 "cache": {
                     "directory": ".ccls-cache"
@@ -25,7 +63,9 @@
         },
         "cmake": {
             "command": "cmake-language-server",
-            "filetypes": ["cmake"],
+            "filetypes": [
+                "cmake"
+            ],
             "rootPatterns": [
                 "build/"
             ],
@@ -35,12 +75,20 @@
         },
         "dockerfile": {
             "command": "docker-langserver",
-            "filetypes": ["dockerfile"],
-            "args": ["--stdio"]
+            "filetypes": [
+                "dockerfile"
+            ],
+            "args": [
+                "--stdio"
+            ]
         },
         "digestif": {
             "command": "digedtif",
-            "filetypes": ["tex", "plaintex", "context"]
+            "filetypes": [
+                "tex",
+                "plaintex",
+                "context"
+            ]
         }
     },
     "diagnostic.errorSign": "✘",
